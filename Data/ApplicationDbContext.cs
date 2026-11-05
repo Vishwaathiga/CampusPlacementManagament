@@ -25,6 +25,8 @@ namespace CampusPlacementManagement.Data
         public DbSet<JobTargetCollege> JobTargetColleges { get; set; }
         public DbSet<JobEligibleDepartment> JobEligibleDepartments { get; set; }
         public DbSet<JobEligibleGraduationYear> JobEligibleGraduationYears { get; set; }
+        public DbSet<JobApplication> JobApplications { get; set; }
+        public DbSet<ApplicationStatusHistory> ApplicationStatusHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
