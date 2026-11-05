@@ -1,6 +1,11 @@
 ﻿namespace CampusPlacementManagement.Enums
 {
-    public class CompanyStatus
+    public enum CompanyStatus
     {
+        Pending,
+        Approved,
+        Rejected,
+        Suspended,
+        Inactive
     }
 }

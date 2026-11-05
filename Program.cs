@@ -1,14 +1,74 @@
+
+using CampusPlacementManagement.Constants;
+using CampusPlacementManagement.Data;
+using CampusPlacementManagement.Models;
+using CampusPlacementManagement.Repositories.Interfaces;
+using CampusPlacementManagement.Repositories.Implementations;
+using CampusPlacementManagement.Services.Interfaces;
+using CampusPlacementManagement.Services.Implementations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("JWT Key is missing.");
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireUppercase = false;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+// College Repository and Service
+builder.Services.AddScoped<ICollegeRepository, CollegeRepository>();
+builder.Services.AddScoped<ICollegeService, CollegeService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Seed roles and SuperAdmin
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedRolesAndSuperAdmin(
+        scope.ServiceProvider,
+        app.Configuration);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -16,6 +76,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
