@@ -20,6 +20,11 @@ namespace CampusPlacementManagement.Data
         public DbSet<CompanyHR> CompanyHRs { get; set; }
 
         public DbSet<Student> Students { get; set; }
+
+        public DbSet<JobOpening> JobOpenings { get; set; }
+        public DbSet<JobTargetCollege> JobTargetColleges { get; set; }
+        public DbSet<JobEligibleDepartment> JobEligibleDepartments { get; set; }
+        public DbSet<JobEligibleGraduationYear> JobEligibleGraduationYears { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
