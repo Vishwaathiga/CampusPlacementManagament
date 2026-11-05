@@ -63,6 +63,10 @@ builder.Services.AddScoped<ICollegeService, CollegeService>();
 // Placement Officer Repository and Service
 builder.Services.AddScoped<IPlacementOfficerRepository, PlacementOfficerRepository>();
 builder.Services.AddScoped<IPlacementOfficerService, PlacementOfficerService>();
+
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+
 var app = builder.Build();
 
 // Seed roles and SuperAdmin
