@@ -28,6 +28,10 @@ namespace CampusPlacementManagement.Data
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<ApplicationStatusHistory> ApplicationStatusHistories { get; set; }
         public DbSet<RecruitmentDrive> RecruitmentDrives { get; set; }
+
+        public DbSet<InterviewRound> InterviewRounds { get; set; }
+
+        public DbSet<InterviewSchedule> InterviewSchedules { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
