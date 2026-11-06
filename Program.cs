@@ -92,6 +92,9 @@ builder.Services.AddScoped<IInterviewRoundService, InterviewRoundService>();
 builder.Services.AddScoped<IInterviewScheduleRepository, InterviewScheduleRepository>();
 builder.Services.AddScoped<IInterviewScheduleService, InterviewScheduleService>();
 
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+builder.Services.AddScoped<IReportsService, ReportsService>();
+
 var app = builder.Build();
 
 // Seed roles and SuperAdmin
